@@ -10,13 +10,13 @@ class Api::V1::TripsController < ApplicationController
         if trip.valid?
             render json: trip
         else
-            render json: { error: 'failed to create user' }
+            render json: { error: 'failed to create trip' }
         end
     end
 
     private
 
     def trip_params
-        params.requite(:trip).permit(:user_id, :destination, :continent, :travel_data)
+        params.require(:trip).permit(:user_id, :destination, :continent, :travel_date)
     end
 end
