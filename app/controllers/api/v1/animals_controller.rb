@@ -4,13 +4,18 @@ class Api::V1::AnimalsController < ApplicationController
         render json: animals
     end
 
+    def show
+        anima = Anima.find(params[:id])
+        render json: { animal: AnimalSerializer.new(animal) }, status: :accepted
+    end
+
     def create
         animal = Animal.create(animal_params)
 
         if animal.valid?
-            render json: animal
+            render json: { animal: AnimalSerializer.new(animal) }, status: :created
         else
-            render json: { error: 'failed to create animal' }
+            render json: { error: 'failed to create animal' }, status: :not_acceptable
         end
     end
 
