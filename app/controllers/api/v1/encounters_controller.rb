@@ -1,7 +1,7 @@
 class Api::V1::EncountersController < ApplicationController
 
     def show
-        encounter = encounter.find(params[:id])
+        encounter = Encounter.find(params[:id])
         render json: { encounter: EncounterSerializer.new(encounter) }, status: :accepted
     end
 

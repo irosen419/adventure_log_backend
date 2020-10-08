@@ -6,7 +6,7 @@ class Api::V1::AnimalsController < ApplicationController
 
     def show
         anima = Anima.find(params[:id])
-        render json: { animal: AnimalSerializer.new(animal) }
+        render json: { animal: AnimalSerializer.new(animal) }, status: :accepted
     end
 
     def create
