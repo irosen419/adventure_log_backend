@@ -1,8 +1,8 @@
 class Api::V1::EncountersController < ApplicationController
+    before_action :find_encounter, only: [:show, :update, :destroy]
 
     def show
-        encounter = Encounter.find(params[:id])
-        render json: { encounter: EncounterSerializer.new(encounter) }, status: :accepted
+        render json: { encounter: EncounterSerializer.new(@encounter) }, status: :accepted
     end
 
     def create
@@ -10,11 +10,33 @@ class Api::V1::EncountersController < ApplicationController
         if encounter.valid?
             render json: { encounter: EncounterSerializer.new(encounter) }, status: :created
         else
-            render json: { error: 'failed to create encounter' }, status: :not_acceptable
+            render json: { error: 'Failed to create encounter' }, status: :not_acceptable
+        end
+    end
+
+    def update
+        @encounter.update(encounter_params)
+        if @encounter.valid?
+            render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted
+        else
+            render json: { error: 'Failed to update encounter' }, status: :not_acceptable
+        end
+    end
+
+    def destroy
+        @encounter.destroy
+        if !@encounter.save
+            render json: { success: "Deleted encounter" }, status: :accepted
+        else
+            render json: {error: 'Failed to delete encounter', encounter: @encounter}, status: :not_acceptable
         end
     end
 
     private
+
+    def find_encounter
+        @encounter = Encounter.find(params[:id])
+    end
 
     def encounter_params
         params.require(:encounter).permit(:trip_id, :animal_id, :time_of_day, :weather_conditions, :notes)

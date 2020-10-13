@@ -1,6 +1,8 @@
 class Api::V1::UsersController < ApplicationController
     skip_before_action :authorized, only: [:create]
 
+    before_action :find_user, only: [:show, :update, :destroy]
+
     def profile
         render json: { user: UserSerializer.new(current_user) }, status: :accepted
     end
@@ -11,12 +13,11 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def show
-        user = User.find(params[:id])
-        render json: { user: UserSerializer.new(user) }, stats: :accepted
+        render json: { user: UserSerializer.new(@user) }, stats: :accepted
     end
 
     def trips
-        trips = Trip.where(user_id: [params[:user_id]])
+        trips = Trip.where(user_id: [params[:id]])
         render json: trips
     end
 
@@ -26,11 +27,33 @@ class Api::V1::UsersController < ApplicationController
             @token = encode_token(user_id: user.id)
             render json: { user: UserSerializer.new(user), jwt: @token }, status: :created
         else
-            render json: { error: 'failed to create user' }, status: :not_acceptable
+            render json: { error: 'Failed to create user' }, status: :not_acceptable
+        end
+    end
+
+    def update
+        @user.update(user_params)
+        if @user.valid?
+            render json: { user: UserSerializer.new(user) }, stats: :accepted
+        else
+            render json: { error: 'Failed to update user' }, status: :not_acceptable
+        end
+    end
+
+    def destroy
+        @user.destroy
+        if !@user.save
+            render json: { success: "Deleted user" }, status: :accepted
+        else
+            render json: {error: 'Failed to delete user', user: user}, status: :not_acceptable
         end
     end
 
     private
+
+    def find_user
+        @user = User.find(params[:id])
+    end
 
     def user_params
         params.require(:user).permit(:username, :password, :password_confirmation)
