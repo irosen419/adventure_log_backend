@@ -6,7 +6,11 @@ class Api::V1::EncountersController < ApplicationController
     end
 
     def create
-        encounter = Encounter.create(encounter_params)
+        encounter = Encounter.create(encounter_params.to_h)
+        if params[:encounter][:photo]
+            encounter.img_url = rails_blob_url(encounter.photo)
+            encounter.save
+        end
         if encounter.valid?
             render json: { encounter: EncounterSerializer.new(encounter) }, status: :created
         else
@@ -39,6 +43,6 @@ class Api::V1::EncountersController < ApplicationController
     end
 
     def encounter_params
-        params.require(:encounter).permit(:trip_id, :animal_id, :time_of_day, :weather_conditions, :notes)
+        params.require(:encounter).permit(:trip_id, :animal_id, :time_of_day, :weather_conditions, :notes, :photo)
     end
 end
