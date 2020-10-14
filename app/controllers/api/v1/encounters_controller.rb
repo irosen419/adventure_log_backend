@@ -8,8 +8,12 @@ class Api::V1::EncountersController < ApplicationController
     def create
         encounter = Encounter.create(encounter_params.to_h)
         # byebug
-        if params[:encounter][:photo]
-            encounter.img_url = rails_blob_url(encounter.photo)
+        if params[:encounter][:images]
+            params[:encounter][:images].each do |image|
+                encounter.images.attach(image[1])
+            end
+            encounter.photos = encounter.images.map{|image| url_for(image)}
+            # encounter.img_url = rails_blob_url(encounter.photo)
             encounter.save
         end
         if encounter.valid?
@@ -49,6 +53,6 @@ class Api::V1::EncountersController < ApplicationController
     end
 
     def encounter_params
-        params.require(:encounter).permit(:trip_id, :animal_id, :time_of_day, :weather_conditions, :notes, :photo)
+        params.require(:encounter).permit(:trip_id, :animal_id, :time_of_day, :weather_conditions, :notes, images: [])
     end
 end
