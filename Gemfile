@@ -16,6 +16,9 @@ gem 'puma', '~> 4.1'
 # Use Active Model has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
+#AWS S3
+gem 'aws-sdk-s3'
+
 #JSON
 gem 'json', '~> 1.8', '>= 1.8.3'
 
