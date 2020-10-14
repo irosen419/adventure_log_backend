@@ -7,6 +7,7 @@ class Api::V1::EncountersController < ApplicationController
 
     def create
         encounter = Encounter.create(encounter_params.to_h)
+        # byebug
         if params[:encounter][:photo]
             encounter.img_url = rails_blob_url(encounter.photo)
             encounter.save
