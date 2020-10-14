@@ -21,6 +21,11 @@ class Api::V1::UsersController < ApplicationController
         render json: trips
     end
 
+    def follow(username)
+        user = User.find_by(username: username)
+        Friendship.create(follower_id: self.id, following_id: user.id)
+    end
+
     def create
         user = User.create(user_params)
         if user.valid?
