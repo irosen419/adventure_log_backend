@@ -7,6 +7,7 @@ class Api::V1::EncountersController < ApplicationController
 
     def create
         encounter = Encounter.create(encounter_params.to_h)
+        # byebug
         if params[:encounter][:photo]
             encounter.img_url = rails_blob_url(encounter.photo)
             encounter.save
@@ -19,7 +20,12 @@ class Api::V1::EncountersController < ApplicationController
     end
 
     def update
+        # byebug
         @encounter.update(encounter_params)
+        if params[:encounter][:photo]
+            encounter.img_url = rails_blob_url(encounter.photo)
+            encounter.save
+        end
         if @encounter.valid?
             render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted
         else
