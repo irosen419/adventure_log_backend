@@ -31,6 +31,16 @@ class Api::V1::UsersController < ApplicationController
         end
     end
 
+    def unfriend
+        friendship = Friendship.find_by(follower_id: params[:friendship][:follower_id], following_id: params[:friendship][:following_id])
+        friendship.destroy
+        if !friendship.save
+            render json: { success: "Successfully unfriended this person" }, status: :accepted
+        else
+            render json: { error: "Failed to unfriend user" }, status: :not_acceptable
+        end
+    end
+
     def followings
         user = User.find(params[:id])
         render json: { followings: UserSerializer.new(user).followings }, status: :accepted
