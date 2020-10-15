@@ -9,11 +9,11 @@ class Api::V1::UsersController < ApplicationController
 
     def index
         users = User.all
-        render json: users
+        render json: {users: users.map {|user| UserSerializer.new(user)}}, status: :accepted
     end
 
     def show
-        render json: { user: UserSerializer.new(@user) }, stats: :accepted
+        render json: { user: UserSerializer.new(@user) }, status: :accepted
     end
 
     def trips
@@ -22,10 +22,11 @@ class Api::V1::UsersController < ApplicationController
     end
 
     def friendship
-        friends = Friendship.create(friendship_params)
+        friendship = Friendship.create(friendship_params)
+        user = User.find(friendship[:following_id])
 
-        if friends.valid?
-            render json: friends
+        if friendship.valid?
+            render json: {user: UserSerializer.new(user)}
         else
             render json: { error: 'Failed to foster friendship' }, status: :not_acceptable
         end
