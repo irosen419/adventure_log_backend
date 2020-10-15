@@ -21,9 +21,19 @@ class Api::V1::UsersController < ApplicationController
         render json: trips
     end
 
-    def follow(username)
-        user = User.find_by(username: username)
-        Friendship.create(follower_id: self.id, following_id: user.id)
+    def friendship
+        friends = Friendship.create(friendship_params)
+
+        if friends.valid?
+            render json: friends
+        else
+            render json: { error: 'Failed to foster friendship' }, status: :not_acceptable
+        end
+    end
+
+    def followings
+        user = User.find(params[:id])
+        render json: { followings: UserSerializer.new(user).followings }, status: :accepted
     end
 
     def create
@@ -62,5 +72,9 @@ class Api::V1::UsersController < ApplicationController
 
     def user_params
         params.require(:user).permit(:username, :password, :password_confirmation)
+    end
+
+    def friendship_params
+        params.require(:friendship).permit(:follower_id, :following_id)
     end
 end
