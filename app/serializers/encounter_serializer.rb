@@ -7,7 +7,6 @@ class EncounterSerializer < ActiveModel::Serializer
 
   def encounter_images
     object.images
-    # byebug
   end
 
 
