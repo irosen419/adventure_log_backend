@@ -1,5 +1,5 @@
 class TripSerializer < ActiveModel::Serializer
-  attributes :id, :destination, :continent, :date, :my_encounters
+  attributes :id, :user_id, :destination, :continent, :date, :my_encounters
 
   def date
     if object.travel_date
