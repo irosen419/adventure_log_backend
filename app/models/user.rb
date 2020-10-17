@@ -1,5 +1,6 @@
 class User < ApplicationRecord
     has_many :trips, :dependent => :delete_all
+    has_many :encounters, through: :trips
 
     has_many :received_follows, foreign_key: :following_id, class_name: "Friendship"
     has_many :followers, through: :received_follows, source: :follower

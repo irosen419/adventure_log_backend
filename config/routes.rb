@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       post 'friendship', to: 'users#friendship'
       post 'unfriend', to: 'users#unfriend'
       get '/users/:id/followings', to: 'users#followings'
-      resources :trips, only: [:show, :create, :update, :destroy]
+      resources :trips, only: [:index, :show, :create, :update, :destroy]
       get '/trips/:id/encounters', to: 'trips#encounters'
       resources :encounters, only: [:show, :create, :update, :destroy]
       resources :animals, only: [:index, :create]
