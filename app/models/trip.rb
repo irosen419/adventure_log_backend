@@ -4,4 +4,8 @@ class Trip < ApplicationRecord
   has_many :animals, through: :encounters
 
   validates :destination, :continent, presence: true
+
+  def username
+    self.user.username
+  end
 end

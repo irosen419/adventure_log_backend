@@ -1,5 +1,5 @@
 class TripSerializer < ActiveModel::Serializer
-  attributes :id, :user_id, :destination, :continent, :date, :my_encounters
+  attributes :id, :user_id, :my_user, :destination, :continent, :date, :my_encounters
 
   def date
     if object.travel_date
@@ -9,5 +9,9 @@ class TripSerializer < ActiveModel::Serializer
 
   def my_encounters
     object.encounters.map{|encounter| EncounterSerializer.new(encounter)}
+  end
+
+  def my_user
+    User.find(object.user_id)["username"]
   end
 end
