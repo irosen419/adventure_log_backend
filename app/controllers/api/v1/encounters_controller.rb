@@ -1,5 +1,5 @@
 class Api::V1::EncountersController < ApplicationController
-    before_action :find_encounter, only: [:show, :update, :destroy]
+    before_action :find_encounter, only: [:show, :update, :add_photos, :destroy]
 
     def show
         render json: { encounter: EncounterSerializer.new(@encounter) }, status: :accepted
@@ -13,7 +13,6 @@ class Api::V1::EncountersController < ApplicationController
                 encounter.images.attach(image[1])
             end
             encounter.photos = encounter.images.map{|image| url_for(image)}
-            # encounter.img_url = rails_blob_url(encounter.photo)
             encounter.save
         end
         if encounter.valid?
@@ -26,9 +25,30 @@ class Api::V1::EncountersController < ApplicationController
     def update
         # byebug
         @encounter.update(encounter_params)
-        if params[:encounter][:photo]
-            encounter.img_url = rails_blob_url(encounter.photo)
-            encounter.save
+        if params[:encounter][:images]
+            @encounter.images = []
+            params[:encounter][:images].each do |image|
+                @encounter.images.attach(image[1])
+            end
+            @encounter.photos = @encounter.images.map{|image| url_for(image)}
+            @encounter.save
+        end
+        if @encounter.valid?
+            render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted
+        else
+            render json: { error: 'Failed to update encounter' }, status: :not_acceptable
+        end
+    end
+
+    def add_photos
+        # byebug
+        @encounter.update(encounter_params)
+        if params[:encounter][:images]
+            params[:encounter][:images].each do |image|
+                @encounter.images.attach(image[1])
+            end
+            @encounter.photos = @encounter.images.map{|image| url_for(image)}
+            @encounter.save
         end
         if @encounter.valid?
             render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted

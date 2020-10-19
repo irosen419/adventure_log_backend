@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :trips, only: [:index, :show, :create, :update, :destroy]
       get '/trips/:id/encounters', to: 'trips#encounters'
       resources :encounters, only: [:show, :create, :update, :destroy]
+      patch '/encounters/:id/photos', to: 'encounters#add_photos'
       resources :animals, only: [:index, :create]
     end
   end
