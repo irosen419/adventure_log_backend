@@ -26,6 +26,7 @@ class Api::V1::EncountersController < ApplicationController
         # byebug
         @encounter.update(encounter_params)
         if params[:encounter][:images]
+            @encounter.images = []
             params[:encounter][:images].each do |image|
                 @encounter.images.attach(image[1])
             end
