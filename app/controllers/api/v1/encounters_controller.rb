@@ -13,7 +13,6 @@ class Api::V1::EncountersController < ApplicationController
                 encounter.images.attach(image[1])
             end
             encounter.photos = encounter.images.map{|image| url_for(image)}
-            # encounter.img_url = rails_blob_url(encounter.photo)
             encounter.save
         end
         if encounter.valid?
@@ -26,9 +25,12 @@ class Api::V1::EncountersController < ApplicationController
     def update
         # byebug
         @encounter.update(encounter_params)
-        if params[:encounter][:photo]
-            encounter.img_url = rails_blob_url(encounter.photo)
-            encounter.save
+        if params[:encounter][:images]
+            params[:encounter][:images].each do |image|
+                @encounter.images.attach(image[1])
+            end
+            @encounter.photos = @encounter.images.map{|image| url_for(image)}
+            @encounter.save
         end
         if @encounter.valid?
             render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted
