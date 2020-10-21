@@ -44,7 +44,7 @@ class Api::V1::UsersController < ApplicationController
 
     def followings
         user = User.find(params[:id])
-        render json: { followings: UserSerializer.new(user).followings }, status: :accepted
+        render json: { followings: UserSerializer.new(user).following }, status: :accepted
     end
 
     def create

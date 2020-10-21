@@ -9,7 +9,7 @@ class UserSerializer < ActiveModel::Serializer
     object.encounters.map{|encounter| EncounterSerializer.new(encounter)}
   end
 
-  def followings
+  def following
     object.followings.map { |user| UserSerializer.new(user) }
   end
 
