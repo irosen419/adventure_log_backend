@@ -10,11 +10,10 @@ class Api::V1::EncountersController < ApplicationController
         # byebug
         if params[:encounter][:images]
             params[:encounter][:images].each do |image|
-                encounter.images.attach(image[1])
+                encounter.save_image(image, encounter)
             end
-            encounter.photos = encounter.images.map{|image| url_for(image)}
-            encounter.save
         end
+        encounter.save
         if encounter.valid?
             render json: { encounter: EncounterSerializer.new(encounter) }, status: :created
         else
@@ -26,13 +25,12 @@ class Api::V1::EncountersController < ApplicationController
         # byebug
         @encounter.update(encounter_params)
         if params[:encounter][:images]
-            @encounter.images = []
+            @encounter.photos = []
             params[:encounter][:images].each do |image|
-                @encounter.images.attach(image[1])
+                @encounter.save_image(image, encounter)
             end
-            @encounter.photos = @encounter.images.map{|image| url_for(image)}
-            @encounter.save
         end
+        @encounter.save
         if @encounter.valid?
             render json: { encounter: EncounterSerializer.new(@encounter) }, stats: :accepted
         else

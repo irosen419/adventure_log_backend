@@ -4,5 +4,10 @@ class Encounter < ApplicationRecord
 
   validates :animal_id, presence: true
 
-  has_many_attached :images
+  def save_image(image, encounter)
+    name = File.basename(image)
+    obj = S3_BUCKET.object(name)
+    obj.upload_file(image)
+    encounter.photos.push(obj.public_url.to_s)
+  end
 end
