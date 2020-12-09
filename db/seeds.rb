@@ -12,7 +12,7 @@ require 'json'
 # Animal.all.destroy
 # User.all.destroy
 
-IUCN_KEY = ENV['iucn_api_key']
+IUCN_KEY = ENV['IUCN_API_KEY']
 
 counter = 0
 animal_array = []
