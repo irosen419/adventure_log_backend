@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 require 'rest-client'
-require 'JSON'
+require 'json'
 require 'byebug'
 
 # Animal.all.destroy
