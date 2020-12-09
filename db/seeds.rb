@@ -8,7 +8,6 @@
 
 require 'rest-client'
 require 'json'
-require 'byebug'
 
 # Animal.all.destroy
 # User.all.destroy
