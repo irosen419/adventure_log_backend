@@ -25,7 +25,7 @@ while counter < 13 do
     counter += 1
 end
 
-animal_array = animal_array.select {|animal| (animal["scientific_name"] && animal['kingdom_name'] == 'ANIMALIA' && animal['phylum_name'] == 'CHORDATA' && animal['class_name'] == 'AVES' && (animal["category"] == "CR" || animal["category"] == "VU" || animal["category"] == "EN" || animal["category"] == "EW"))}
+animal_array = animal_array.select {|animal| (animal["scientific_name"] && animal['kingdom_name'] == 'ANIMALIA' && animal['phylum_name'] == 'CHORDATA' && animal['class_name'] == 'MAMMALIA' && (animal["category"] == "CR" || animal["category"] == "VU" || animal["category"] == "EN" || animal["category"] == "EW"))}
 animal_array = animal_array.map {|animal| animal['scientific_name']}
 puts animal_array.length
 counter = 1
